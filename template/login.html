@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedy Snack Shack</title>
+    <style>
+        body{
+            margin: 10%;
+            background-color: Gainsboro;
+            font-family: Arial, sans-serif;
+        }
+
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+            width: 800px;
+            border: 1px;
+            margin: auto;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .left, .right{
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .left {
+            background-color: white;
+            height: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right {
+            background: linear-gradient(to bottom, midnightblue, steelblue);
+            height: 100%;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input{
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 15px;
+            border: 1px solid gray;
+            box-sizing: border-box;
+        }
+
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            padding-left: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: midnightblue;
+            color: white;
+            cursor: pointer;
+            width: 40%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: steelblue;
+        }
+
+        #acc{
+            color: gray;
+        }
+
+        a{
+            color: black;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1> Sign into your Account </h1> <br>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" id="email" placeholder="Email ID" required> <br> <br>
+                <input type="password" name="password" id="password" placeholder="Password" required> <br> <br>
+                <input type="submit" value="Sign In"> <br><br>
+
+                {% if errmsg %}
+                <div class="alert alert-primary" role="alert" style="color: crimson;">
+                    {{errmsg}}
+                </div>
+                {% endif %}
+
+                <p id="acc"> Don't have an Account? 
+                    <a href="/register"> Sign Up </a>
+                </p>
+            </form>
+        </div>
+        <div class="right">
+            <h1> Welcome Back to Speedy Snack Shack! </h1>
+            <p>Great to see you back! We've missed serving you!</p>
+            <p>Get ready to enjoy our delicious fast food and refreshing beverages once again.</p>
+            <p>Thank you for choosing Speedy Snack Shack!</p>
+        </div>
+    </div>
+</body>
+</html>

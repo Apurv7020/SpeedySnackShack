@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedy Snack Shack Feedback</title>
+    <style>
+        body {
+            margin: 10%;
+            background-color: Gainsboro;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: auto;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 90%;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 10px;
+            border: 1px solid gray;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: midnightblue;
+            color: white;
+            cursor: pointer;
+            width: auto;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        input[type="submit"]:hover {
+            background-color: steelblue;
+        }
+
+        .heading{
+            text-align: center;
+            margin-bottom: 15px;
+            background-color: beige;
+            width: 120%;
+        }
+
+        a{
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">
+        <h2>We value your feedback.</h2>
+        <p>Please complete the form and help us to improve.</p>
+        </div>
+        <form action="#" method="POST">
+            {% csrf_token %}
+                <input type="text" name="name" id="name" placeholder="Full Name" required>
+                <input type="text" name="mobile" id="mobile" placeholder="Mobile Number" required>
+                <input type="email" name="email" id="email" placeholder="Email ID" required>
+                <textarea name="feedback" id="feedback" placeholder="Your feedback. Max 200 letters allowed." rows="5" maxlength="200" required></textarea><br>
+            <div class="row" style="text-align: center;">
+                {% if msg %}
+                <p> {{msg}} </p>
+                {% endif %}
+            </div> <br>
+            <a href="/feedback"><input type="submit" value="Submit"><br></a>
+        </form>
+    </div>
+</body>
+</html>

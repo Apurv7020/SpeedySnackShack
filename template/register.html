@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedy Snack Shack</title>
+    <style>
+        body{
+            margin: 10%;
+            background-color: Gainsboro;
+            font-family: Arial, sans-serif;
+        }
+
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+            width: 800px;
+            border: 1px;
+            margin: auto;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .left, .right{
+            width: 50%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .left {
+            background-color: white;
+            height: 100%;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .right {
+            background: linear-gradient(to bottom, midnightblue, steelblue);
+            height: 100%;
+            color: white;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input{
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 15px;
+            border: 1px solid gray;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]::placeholder,
+        input[type="email"]::placeholder,
+        input[type="password"]::placeholder {
+            padding-left: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: midnightblue;
+            color: white;
+            cursor: pointer;
+            width: 40%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: steelblue;
+        }
+
+        #acc{
+            color: gray;
+        }
+
+        a{
+            color: black;
+            text-decoration: none;
+        }
+        
+        .half-input{
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .half-input{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .half-input input {
+            width: 48%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1> Sign up for an Account </h1><br>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="half-input">
+                    <input type="text" name="fname" id="fname" placeholder="First Name" required>
+                    <input type="text" name="lname" id="lname" placeholder="Last Name" required> 
+                </div> <br>
+                <input type="email" name="email" id="email" placeholder="Email ID" required> <br> <br>
+                <input type="password" name="password" id="password" placeholder="Password" required> <br> <br>
+                <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required> <br> <br>
+                <input type="submit" value="Sign Up"> <br><br>
+
+                {% if errmsg %}
+                <div class="alert alert-primary" role="alert" style="color: crimson;">
+                    {{errmsg}}
+                </div>
+                {% endif %}
+                
+                <p id="acc"> Already have an Account? 
+                    <a href="/login"> Sign In </a>
+                </p>
+            </form>
+        </div>
+        <div class="right">
+            <h1> Welcome to Speedy Snack Shack! </h1>
+            <p>We are dedicated to serving you the best fast food experience. From delicious pizzas and burgers to refreshing beverages, we have everything to satisfy your cravings.</p>
+            <p>Join us today and experience the convenience of Speedy Snack Shack!</p>
+        </div>
+    </div>
+</body>
+</html>
