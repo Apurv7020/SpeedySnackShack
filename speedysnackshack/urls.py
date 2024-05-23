@@ -44,6 +44,7 @@ urlpatterns = [
     path('fetchorder/', views.fetchorder),
     path('makepayment/', views.makepayment),
     path('remove/<bid>', views.deleteitem),
+    path('verify_otp',views.verify_otp)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)  

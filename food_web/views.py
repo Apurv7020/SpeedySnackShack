@@ -1,8 +1,11 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from .models import Product, Cart, Person, Feedback, Store, Order
 from django.db.models import Q
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
+from django.conf import settings
 
 # Create your views here.
 
@@ -21,6 +24,9 @@ def register(request):
         if fn == "" or ln == "" or em == "" or pw == "" or cpw == "":
             context["errmsg"] = "Fiels cannot be empty."
             return render(request,'register.html',context)
+        elif not fn.isalpha() or not ln.isalpha():
+            context["errmsg"] = "First name and last name should only contain alphabetic characters."
+            return render(request, 'register.html', context)
         elif pw != cpw:
             context["errmsg"] = "Password does not match."
             return render(request,'register.html',context)
@@ -42,29 +48,74 @@ def register(request):
 
             p = Person.objects.create(user_id=u , mobile=mob, address=add)
             p.save()
+
             return redirect('/dashboard')
         
     return render(request, 'register.html')
 
 
-def ulogin(request):
+def send_otp(email, otp):                                                               # Function to send OTP to user's email
+    subject = 'Your OTP for Speedy Snack Shack Login'
+    message = f'Your OTP for login is: {otp}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [email]
+    send_mail(subject, message, email_from, recipient_list)
+
+def ulogin(request):                                                                   # View to handle user login
     context = {}
     if request.method == 'POST':
         em = request.POST['email']
         pw = request.POST['password']
-        print(em, pw)
+        user = authenticate(username=em, password=pw)                                    # Authenticate the user
 
-        u = authenticate(username=em,password=pw)     #used to check if username and password is authenticated or not. To authenticate, password must be hash protected.
-        print(u)
-
-        if u is not None:
-            login(request, u)                          #start the session and stores id of authenticated user from auth_user in session
-            return redirect('/dashboard')
+        if user is not None:
+            otp = get_random_string(length=6, allowed_chars='0123456789')               # Generate a random OTP
+            # Store the OTP and user ID in the session
+            request.session['otp'] = otp
+            request.session['user_id'] = user.id
+            send_otp(em, otp)                                                            # Send the OTP to the user's email
+            return redirect('/verify_otp')
         else:
             context["errmsg"] = "Password does not match."
-            return render(request, 'login.html',context)
+    
+    return render(request, 'login.html', context)
+
+def verify_otp(request):                                                                # View to verify the OTP
+    if request.method == 'POST':
+        entered_otp = request.POST['otp']
+        stored_otp = request.session.get('otp')
+        user_id = request.session.get('user_id')
+
+        if entered_otp == stored_otp:
+            user = User.objects.get(id=user_id)
+            login(request, user)
+            # Clear the OTP and user ID from the session
+            del request.session['otp']
+            del request.session['user_id']
+            return redirect('/dashboard')
+        else:
+            return render(request, 'verify_otp.html', {'errmsg': 'Invalid OTP'})
+    
+    return render(request, 'verify_otp.html')
+
+# def ulogin(request):
+#     context = {}
+#     if request.method == 'POST':
+#         em = request.POST['email']
+#         pw = request.POST['password']
+#         print(em, pw)
+
+#         u = authenticate(username=em,password=pw)     #used to check if username and password is authenticated or not. To authenticate, password must be hash protected.
+#         print(u)
+
+#         if u is not None:
+#             login(request, u)                          #start the session and stores id of authenticated user from auth_user in session
+#             return redirect('/dashboard')
+#         else:
+#             context["errmsg"] = "Password does not match."
+#             return render(request, 'login.html',context)
                 
-    return render(request, 'login.html',context)
+#     return render(request, 'login.html',context)
 
 def ulogout(request):
     print("User: ", request.user, "Logged out")
@@ -287,4 +338,9 @@ def makepayment(request):
     context={}
     context["payment"]=payment
 
+    clear_user_orders(request.user.id)
+
     return render(request, 'pay.html',context)
+
+def clear_user_orders(user_id):
+    Order.objects.filter(user_id=user_id).delete()

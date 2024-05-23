@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP</title>
+    <style>
+        body {
+            margin: 10%;
+            background-color: Gainsboro;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            width: 300px;
+            border: 1px solid gray;
+            background-color: white;
+            margin: auto;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .container form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: 1px solid gray;
+        }
+
+        input[type="submit"] {
+            background-color: darkgreen;
+            color: white;
+            cursor: pointer;
+            width: 100px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: forestgreen;
+        }
+
+        .errmsg {
+            color: crimson;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="" method="POST">
+            {% csrf_token %}
+            <h1>Enter OTP</h1>
+            <input type="text" name="otp" placeholder="Enter OTP to Login" required>
+            <input type="submit" value="Verify">
+            {% if errmsg %}
+            <div class="errmsg">{{ errmsg }}</div>
+            {% endif %}
+        </form>
+    </div>
+</body>
+</html>
