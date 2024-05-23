@@ -138,7 +138,7 @@
                 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
                 <script>
                  var options = {
-                    "key": "rzp_test_NMRA7qyGBTM6Ei", // Enter the Key ID generated from the Dashboard
+                    "key": "Your_API_KEY", // Enter the Key ID generated from the Dashboard
                     "amount": '{{payment.amount}}', // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                     "currency": "INR",
                     "name": "SpeedySnackShack",
@@ -152,9 +152,9 @@
                        window.location.href="http://127.0.0.1:8000/dashboard"
                     },
                     "prefill": {
-                        "name": "Apurv Kalane",
-                        "email": "apurvkalane@gmail.com",
-                        "contact": "9272007020"
+                        "name": "Your Name",
+                        "email": "your_mail_id@gmail.com",
+                        "contact": "contact"
                     },
                     "notes": {
                         "address": "Razorpay Corporate Office"
