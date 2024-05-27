@@ -335,7 +335,7 @@ def fetchorder(request):
 
 import razorpay
 def makepayment(request):
-    client = razorpay.Client(auth=("rzp_test_NMRA7qyGBTM6Ei", "LBGZrdTVudukqiu52AwiaQCd"))
+    client = razorpay.Client(auth=("Your_API_KEY", "Your_API_KEY_PASS"))
     orders=Order.objects.filter(user_id=request.user.id)
     context={}
     u = User.objects.filter(id=request.user.id)
