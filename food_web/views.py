@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Product, Cart, Person, Feedback, Store, Order
+from .models import Product, Cart, Person, Feedback, Store, Order, OrderHistory
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
 from django.conf import settings
+from datetime import datetime
 
 # Create your views here.
 
@@ -48,8 +49,7 @@ def register(request):
 
             p = Person.objects.create(user_id=u , mobile=mob, address=add)
             p.save()
-
-            return redirect('/dashboard')
+            return redirect('/login')
         
     return render(request, 'register.html')
 
@@ -98,7 +98,7 @@ def verify_otp(request):                                                        
     
     return render(request, 'verify_otp.html')
 
-# def ulogin(request):
+# def ulogin(request):                                                      
 #     context = {}
 #     if request.method == 'POST':
 #         em = request.POST['email']
@@ -287,25 +287,41 @@ def about(request):
 
 import random
 def placeorder(request):
-    c = Cart.objects.filter(user_id = request.user.id)
-    o_id = random.randrange(1000,9999)
+    c = Cart.objects.filter(user_id=request.user.id)
+    o_id = random.randrange(1000, 9999)
+
+    items_processed = set()  # To keep track of processed items
+
     for i in c:
+        if i.pid.id in items_processed:
+            continue
+        items_processed.add(i.pid.id)
+
         amt = i.Qty * i.pid.price
-        o = Order.objects.create(order_id = o_id, qty = i.Qty, amount = amt, pid = i.pid, user_id = request.user)
+        tax = amt * 0.09
+        total_amount = amt + tax + tax
+
+        o = Order.objects.create(order_id=o_id, qty=i.Qty, amount=amt, pid=i.pid, user_id=request.user)
         o.save()
+
+        oh = OrderHistory.objects.create(order_id=o_id, qty=i.Qty, amount=amt, total_amount=float(total_amount), pid=i.pid, user_id=request.user, date_ordered=datetime.now())
+        oh.save()
         i.delete()
+    
     return redirect('/fetchorder')
 
 def fetchorder(request):
     o = Order.objects.filter(user_id=request.user.id)
     context = {}
     context['orders'] = o
-    u = User.objects.filter(id = request.user.id)
+    u = User.objects.filter(id=request.user.id)
     context['data'] = u
+    p = Person.objects.filter(id=request.user.id)
+    context['person'] = p
+
     sum = 0
     for i in o:
         sum += i.amount
-        #i.delete()
 
     tax = sum * 0.09
     total = sum + tax + tax
@@ -322,17 +338,20 @@ def makepayment(request):
     client = razorpay.Client(auth=("rzp_test_NMRA7qyGBTM6Ei", "LBGZrdTVudukqiu52AwiaQCd"))
     orders=Order.objects.filter(user_id=request.user.id)
     context={}
+    u = User.objects.filter(id=request.user.id)
+    context['data'] = u
     context["orders"]=orders
     sum=0
     
     for x in orders:
         sum=sum+x.amount
-        orderid=x.order_id
+        
+    orderid = str(random.randrange(10000,99999))
     
     tax = sum * 0.09
     total = sum + tax + tax
     
-    data = { "amount": total*100, "currency": "INR", "receipt": orderid }
+    data = { "amount": round(total*100), "currency": "INR", "receipt": orderid }
     payment = client.order.create(data=data)
     print(payment)
     context={}
@@ -340,7 +359,16 @@ def makepayment(request):
 
     clear_user_orders(request.user.id)
 
-    return render(request, 'pay.html',context)
+    return render(request, 'pay.html', context)
 
 def clear_user_orders(user_id):
     Order.objects.filter(user_id=user_id).delete()
+
+def order_history(request):
+    if request.user.is_authenticated:
+        context = {}
+        context['data'] = User.objects.filter(id=request.user.id)
+        context['order_history'] = OrderHistory.objects.filter(user_id=request.user.id).order_by('-date_ordered')
+        return render(request, 'my_orders.html', context)
+    else:
+        return redirect('/login')

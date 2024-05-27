@@ -91,10 +91,6 @@
                             <a class="nav-link active" aria-current="page" href="/store">Store</a>
                           </li>
                         </ul>
-                          <form class="d-flex" role="search" method="GET">
-                            <input class="form-control" type="search" placeholder="Looking for something specific?" aria-label="Search" name="q">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
-                          </form>
                          
                           {% if user.is_authenticated %}
                           <ul class="navbar-nav">
@@ -112,6 +108,7 @@
                                   <ul class="dropdown-menu">
                                   <li><a class="dropdown-item" href="/profile">Profile</a></li>
                                   <li><a class="dropdown-item" href="/cart">Cart</a></li>
+                                  <li><a class="dropdown-item" href="/orders">My Orders</a></li>
                                   <li><hr class="dropdown-divider mt-1 mb-1"></li>
                                   <li><a class="dropdown-item" href="/logout">Logout</a></li>
                                   </ul>
@@ -132,7 +129,6 @@
         </div>
 
         <div class="row">
-
             <div class="col-md-3 mx-auto">
                 <button id="rzp-button1" >Pay with Razorpay</button>
                 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

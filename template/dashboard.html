@@ -107,6 +107,7 @@
                                 <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/profile">Profile</a></li>
                                 <li><a class="dropdown-item" href="/cart">Cart</a></li>
+                                <li><a class="dropdown-item" href="/orders">My Orders</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/logout">Logout</a></li>
                                 </ul>
@@ -148,6 +149,14 @@
         </a>  
         {% endif %}
 
+        <div class="row" style="text-align: center;">
+          {% if msg %}
+          <div class="alert alert-success" role="alert">
+            {{ msg }}
+          </div>
+          {% endif %}
+        </div>
+
         <div class="row mb-5 pb-3 bg-body-secondary justify-content-center">                         <!-- Recommendation -->
           <div class="col-md-8 md-3 mt-3">
               <div class="d-flex justify-content-between">
@@ -176,7 +185,7 @@
                     </a>
                   </div>
                 {% endfor %}
-            </div>
+              </div>
           </div>
         </div>
 

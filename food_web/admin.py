@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Cart, Person, Feedback, Store, Order
+from .models import Product, Cart, Person, Feedback, Store, Order, OrderHistory
 
 # Register your models here.
 
@@ -22,9 +22,13 @@ class StoreAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['order_id' , 'pid' , 'qty' , 'user_id' , 'amount']
 
+class OrderHistoryAdmin(admin.ModelAdmin):
+    list_display = ['order_id' , 'pid' , 'qty' , 'user_id' , 'amount' , 'total_amount']
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Store, StoreAdmin)
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderHistory, OrderHistoryAdmin)

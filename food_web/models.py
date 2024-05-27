@@ -41,4 +41,13 @@ class Order(models.Model):
     user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE, db_column='user_id')
     pid = models.ForeignKey('Product', on_delete=models.CASCADE, db_column='pid')
     qty = models.IntegerField(default=1)
+    amount = models.IntegerField()  
+
+class OrderHistory(models.Model):
+    order_id = models.CharField(max_length=50)
+    user_id = models.ForeignKey('auth.User', on_delete=models.CASCADE, db_column='user_id')
+    pid = models.ForeignKey('Product', on_delete=models.CASCADE, db_column='pid')
+    qty = models.IntegerField(default=1)
     amount = models.IntegerField()
+    total_amount = models.IntegerField()  
+    date_ordered = models.DateTimeField(auto_now=True)
